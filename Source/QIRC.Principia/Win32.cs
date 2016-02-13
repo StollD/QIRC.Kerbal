@@ -36,7 +36,7 @@ namespace QIRC.Commands
         /// </summary>
         public override AccessLevel GetAccessLevel()
         {
-            return AccessLevel.OPERATOR;
+            return AccessLevel.NORMAL;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace QIRC.Commands
         /// </summary>
         public override String GetDescription()
         {
-            return "Delivers the Principia Win32 Build when called by an operator in #principia";
+            return "Delivers the Principia Win32 Build when called in #principia";
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace QIRC.Commands
         {
             if (message.Source != "#principia")
             {
-                QIRC.SendMessage(client, "This command can only be used by operators of #principia.", message.User, message.Source);
+                QIRC.SendMessage(client, "This command can only be used in #principia.", message.User, message.Source);
                 return;
             }
             if (!File.Exists(Constants.Paths.settings + "principia.txt"))
