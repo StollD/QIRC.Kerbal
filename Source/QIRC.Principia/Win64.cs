@@ -16,10 +16,10 @@ using PathIO = System.IO.Path;
 namespace QIRC.Commands
 {
     /// <summary>
-    /// This is the implementation for the win32 command. It will deliver the Win32 Principia Build when called by
+    /// This is the implementation for the win64 command. It will deliver the Win64 Principia Build when called by
     /// an operator.
     /// </summary>
-    public class Win32 : IrcCommand
+    public class Win64 : IrcCommand
     {
         /// <summary>
         /// The Access Level that is needed to execute the command
@@ -42,7 +42,7 @@ namespace QIRC.Commands
         /// </summary>
         public override String GetDescription()
         {
-            return "Delivers the Principia Win32 Build when called in #principia";
+            return "Delivers the Principia Win64 Build when called in #principia";
         }
 
         /// <summary>
@@ -67,7 +67,18 @@ namespace QIRC.Commands
         /// </summary>
         public override void RunCommand(IrcClient client, ProtoIrcMessage message)
         {
-            QIRC.SendMessage(client, "Win32 is no longer supported. Please use the x64 build, available through !win64", message.User, message.Source, true);
+            if (message.Source != "#principia")
+            {
+                QIRC.SendMessage(client, "This command can only be used in #principia.", message.User, message.Source);
+                return;
+            }
+            if (!File.Exists(Constants.Paths.settings + "principia.txt"))
+                File.Create(Constants.Paths.settings + "principia.txt");
+            String[] builds = File.ReadAllLines(Constants.Paths.settings + "principia.txt");
+            if (builds.Count(s => s.StartsWith("Win32:")) == 1)
+                QIRC.SendMessage(client, builds.First(s => s.StartsWith("Win64: ")).Remove(0, "Win64: ".Length), message.User, message.Source, true);
+            else
+                QIRC.SendMessage(client, "There seems to be no build for Win64!", message.User, message.Source, true);
         }
     }
 }
