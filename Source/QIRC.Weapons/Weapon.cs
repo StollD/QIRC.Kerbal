@@ -203,7 +203,7 @@ namespace QIRC.Commands
 
                     if (adjective.Length > 3) // more stuff. mostly a/an detection.
                     {
-                        if (!adjective.EndsWith(" a ") && new[] {"a", "e", "i", "o", "u"}.Contains(extraadj.ToLower().Substring(0, 1)) && extraadj.ToLower().Substring(0, 2) != "eu")
+                        if (adjective.EndsWith(" a ") && new[] {"a", "e", "i", "o", "u"}.Contains(extraadj.ToLower().Substring(0, 1)) && extraadj.ToLower().Substring(0, 2) != "eu")
                             adjective = adjective.Substring(0, adjective.Length - 1) + "n ";
                     }
                     adjective += extraadj;
@@ -211,7 +211,7 @@ namespace QIRC.Commands
             }
             if (adjective.Length > 3) // more stuff. mostly a/an detection.
             {
-                if (!adjective.EndsWith(" a ") && new[] {"a", "e", "i", "o", "u"}.Contains(weapon.ToLower().Substring(0, 1)) && weapon.ToLower().Substring(0, 2) != "eu")
+                if (adjective.EndsWith(" a ") && new[] {"a", "e", "i", "o", "u"}.Contains(weapon.ToLower().Substring(0, 1)) && weapon.ToLower().Substring(0, 2) != "eu")
                     adjective = adjective.Substring(0, adjective.Length - 1) + "n ";
             }
             weapon = adjective + weapon;
