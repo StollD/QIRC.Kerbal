@@ -98,14 +98,20 @@ namespace QIRC.Commands
                     if (weapons.Contains(msg))
                         QIRC.SendMessage(client, "Weapon already added!", message.User, message.Source);
                     else
+                    {
                         weapons.Add(msg);
+                        QIRC.SendMessage(client, "Weapon added!", message.User, message.Source);
+                    }
                 }
                 else if (type == "adj")
                 {
                     if (adjectives.Contains(msg))
                         QIRC.SendMessage(client, "Adjective already added!", message.User, message.Source);
                     else
+                    {
                         adjectives.Add(msg);
+                        QIRC.SendMessage(client, "Adjective added!", message.User, message.Source);
+                    }
                 }
                 else
                 {
