@@ -63,6 +63,19 @@ namespace QIRC.Commands
         }
 
         /// <summary>
+        /// The Parameters of the Command
+        /// </summary>
+        public override String[] GetParameters()
+        {
+            return new String[]
+            {
+                "add", "Adds objects or adjectives",
+                "remove", "Removes objects or adjectives",
+                "stats", "Shows data about the weapons"
+            };
+        }
+
+        /// <summary>
         /// An example for using the command.
         /// </summary>
         /// <returns></returns>
