@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{8222DBE5-CB42-43D3-8872-72B6127C2697}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QIRC.Tea", "Source\QIRC.Tea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QIRC.Principia", "Source\QIRC.Principia\QIRC.Principia.csproj", "{EA217E5D-5EAF-49E5-87A1-62175B049C22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QIRC.Weapons", "Source\QIRC.Weapons\QIRC.Weapons.csproj", "{1979B77E-7A5C-4B8A-9DFC-B26E71274115}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{EA217E5D-5EAF-49E5-87A1-62175B049C22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA217E5D-5EAF-49E5-87A1-62175B049C22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA217E5D-5EAF-49E5-87A1-62175B049C22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1979B77E-7A5C-4B8A-9DFC-B26E71274115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1979B77E-7A5C-4B8A-9DFC-B26E71274115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1979B77E-7A5C-4B8A-9DFC-B26E71274115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1979B77E-7A5C-4B8A-9DFC-B26E71274115}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
