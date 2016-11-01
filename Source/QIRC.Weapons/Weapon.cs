@@ -159,7 +159,14 @@ namespace QIRC.Commands
             if (extraweapon == 1) // weapon/weapon hybrid
                 weapon += "/" + weapons[r.Next(0, weapons.Count)] + " hybrid";
             if (extraweapon == 2) // weapon with a weapon attachment
-                weapon += " with a " + weapons[r.Next(0, weapons.Count)] + " attachment";
+            {
+                String wpn2 = weapons[r.Next(0, weapons.Count)];
+                if (new[] {"a", "e", "i", "o", "u"}.Contains(wpn2.ToLower().Substring(0, 1)) && wpn2.ToLower().Substring(0, 2) != "eu")
+                    weapon += " with an ";
+                else
+                    weapon += " with a ";
+                weapon += wpn2 + " attachment";
+            }
             if (extraweapon == 3) // weapon-like weapon
             {
                 String wpn2 = weapons[r.Next(0, weapons.Count)];
