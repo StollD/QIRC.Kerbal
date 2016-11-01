@@ -67,7 +67,7 @@ namespace QIRC.Commands
         /// </summary>
         public override void RunCommand(IrcClient client, ProtoIrcMessage message)
         {
-            QIRC.SendMessage(client, "Win32 is no longer supported. Please use the x64 build, available through !win64", message.User, message.Source, true);
+            QIRC.SendMessage(client, "Win32 is no longer supported. Please use the x64 build, available through !win64, or get a new bird.", message.User, message.Source, true);
         }
     }
 }

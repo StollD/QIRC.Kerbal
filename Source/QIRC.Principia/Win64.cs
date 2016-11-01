@@ -34,7 +34,7 @@ namespace QIRC.Commands
         /// </summary>
         public override String GetName()
         {
-            return "win32";
+            return "win64";
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace QIRC.Commands
             if (!File.Exists(Constants.Paths.settings + "principia.txt"))
                 File.Create(Constants.Paths.settings + "principia.txt");
             String[] builds = File.ReadAllLines(Constants.Paths.settings + "principia.txt");
-            if (builds.Count(s => s.StartsWith("Win32:")) == 1)
+            if (builds.Count(s => s.StartsWith("Win64:")) == 1)
                 QIRC.SendMessage(client, builds.First(s => s.StartsWith("Win64: ")).Remove(0, "Win64: ".Length), message.User, message.Source, true);
             else
                 QIRC.SendMessage(client, "There seems to be no build for Win64!", message.User, message.Source, true);
