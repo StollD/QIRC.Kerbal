@@ -127,14 +127,20 @@ namespace QIRC.Commands
                     if (!weapons.Contains(msg))
                         QIRC.SendMessage(client, "Weapon doesn't exist!", message.User, message.Source);
                     else
+                    {
                         weapons.Remove(msg);
+                        QIRC.SendMessage(client, "Weapon removed!", message.User, message.Source);
+                    }
                 }
                 else if (type == "adj")
                 {
                     if (!adjectives.Contains(msg))
                         QIRC.SendMessage(client, "Adjective doesn't exist!", message.User, message.Source);
                     else
+                    {
                         adjectives.Remove(msg);
+                        QIRC.SendMessage(client, "Adjective removed!", message.User, message.Source);
+                    }
                 }
                 else
                 {
@@ -223,7 +229,7 @@ namespace QIRC.Commands
             }
             weapon = adjective + weapon;
             if (new[] {"a", "e", "i", "o", "u"}.Contains(weapon.ToLower().Substring(0, 1)) && weapon.ToLower().Substring(0, 2) != "eu")
-                weapon = " an " + weapon;
+                weapon = "an " + weapon;
             else
                 weapon = "a " + weapon;
             QIRC.SendAction(client, $"gives {name} {weapon}", message.Source);
