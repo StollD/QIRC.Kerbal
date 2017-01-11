@@ -79,16 +79,16 @@ namespace QIRC.Commands
         {
             if (message.Source != "#principia")
             {
-                QIRC.SendMessage(client, "This command can only be used in #principia.", message.User, message.Source);
+                BotController.SendMessage(client, "This command can only be used in #principia.", message.User, message.Source);
                 return;
             }
             if (!File.Exists(Constants.Paths.settings + "principia.txt"))
                 File.Create(Constants.Paths.settings + "principia.txt");
             String[] builds = File.ReadAllLines(Constants.Paths.settings + "principia.txt");
             if (builds.Count(s => s.StartsWith("Linux:")) == 1)
-                QIRC.SendMessage(client, builds.First(s => s.StartsWith("Linux: ")).Remove(0, "Linux: ".Length), message.User, message.Source, true);
+                BotController.SendMessage(client, builds.First(s => s.StartsWith("Linux: ")).Remove(0, "Linux: ".Length), message.User, message.Source, true);
             else
-                QIRC.SendMessage(client, "There seems to be no build for Linux!", message.User, message.Source, true);
+                BotController.SendMessage(client, "There seems to be no build for Linux!", message.User, message.Source, true);
         }
     }
 }

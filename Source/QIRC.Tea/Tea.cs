@@ -75,11 +75,11 @@ namespace QIRC.Commands
                 Func<String, Boolean> predicate = s => s.Contains("te") || s.Contains("ti") || s.Contains("ty");
                 String[] select = words.Where(s => noTea ? !predicate(s) : predicate(s)).ToArray();
                 String word = select[new Random().Next(0, select.Length)];
-                QIRC.SendMessage(client, "teabot: " + word, message.User, message.Source, true);
+                BotController.SendMessage(client, "teabot: " + word, message.User, message.Source, true);
             }
             else
             {
-                QIRC.SendMessage(client, "No teabot!", message.User, message.Source);
+                BotController.SendMessage(client, "No teabot!", message.User, message.Source);
             }
         }
     }

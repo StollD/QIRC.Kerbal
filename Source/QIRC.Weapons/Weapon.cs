@@ -9,6 +9,7 @@ using QIRC.Configuration;
 using QIRC.IRC;
 using QIRC.Plugins;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using QIRC.Serialization;
 
@@ -19,9 +20,6 @@ namespace QIRC.Commands
     /// </summary>
     public class Weapon : IrcCommand
     {
-        public static SerializeableList<String> weapons = new SerializeableList<String>("weapons");
-        public static SerializeableList<String> adjectives = new SerializeableList<String>("adjectives");
-
         /// <summary>
         /// The Access Level that is needed to execute the command
         /// </summary>
@@ -67,7 +65,7 @@ namespace QIRC.Commands
         /// </summary>
         public override String[] GetParameters()
         {
-            return new String[]
+            return new []
             {
                 "add", "Adds objects or adjectives",
                 "remove", "Removes objects or adjectives",
@@ -89,6 +87,8 @@ namespace QIRC.Commands
         /// </summary>
         public override void RunCommand(IrcClient client, ProtoIrcMessage message)
         {
+            List<String> weapons = WeaponData.Query.Where(w => w.wpn).Select(w => w.Content).ToList();
+            List<String> adjectives = WeaponData.Query.Where(w => !w.wpn).Select(w => w.Content).ToList();
             String msg = message.Message;
             if (StartsWithParam("add", message.Message))
             {
@@ -96,26 +96,26 @@ namespace QIRC.Commands
                 if (type == "wpn")
                 {
                     if (weapons.Contains(msg))
-                        QIRC.SendMessage(client, "Weapon already added!", message.User, message.Source);
+                        BotController.SendMessage(client, "Weapon already added!", message.User, message.Source);
                     else
                     {
-                        weapons.Add(msg);
-                        QIRC.SendMessage(client, "Weapon added!", message.User, message.Source);
+                        WeaponData.Query.Insert(new WeaponData {Content = msg, wpn = true});
+                        BotController.SendMessage(client, "Weapon added!", message.User, message.Source);
                     }
                 }
                 else if (type == "adj")
                 {
                     if (adjectives.Contains(msg))
-                        QIRC.SendMessage(client, "Adjective already added!", message.User, message.Source);
+                        BotController.SendMessage(client, "Adjective already added!", message.User, message.Source);
                     else
                     {
-                        adjectives.Add(msg);
-                        QIRC.SendMessage(client, "Adjective added!", message.User, message.Source);
+                        WeaponData.Query.Insert(new WeaponData { Content = msg, wpn = false });
+                        BotController.SendMessage(client, "Adjective added!", message.User, message.Source);
                     }
                 }
                 else
                 {
-                    QIRC.SendMessage(client, "Invalid type", message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid type", message.User, message.Source);
                 }
                 return;
             }
@@ -125,35 +125,35 @@ namespace QIRC.Commands
                 if (type == "wpn")
                 {
                     if (!weapons.Contains(msg))
-                        QIRC.SendMessage(client, "Weapon doesn't exist!", message.User, message.Source);
+                        BotController.SendMessage(client, "Weapon doesn't exist!", message.User, message.Source);
                     else
                     {
-                        weapons.Remove(msg);
-                        QIRC.SendMessage(client, "Weapon removed!", message.User, message.Source);
+                        WeaponData.Query.Delete(w => w.Content == msg && w.wpn);
+                        BotController.SendMessage(client, "Weapon removed!", message.User, message.Source);
                     }
                 }
                 else if (type == "adj")
                 {
                     if (!adjectives.Contains(msg))
-                        QIRC.SendMessage(client, "Adjective doesn't exist!", message.User, message.Source);
+                        BotController.SendMessage(client, "Adjective doesn't exist!", message.User, message.Source);
                     else
                     {
-                        adjectives.Remove(msg);
-                        QIRC.SendMessage(client, "Adjective removed!", message.User, message.Source);
+                        WeaponData.Query.Delete(w => w.Content == msg && !w.wpn);
+                        BotController.SendMessage(client, "Adjective removed!", message.User, message.Source);
                     }
                 }
                 else
                 {
-                    QIRC.SendMessage(client, "Invalid type", message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid type", message.User, message.Source);
                 }
                 return;
             }
             if (StartsWithParam("stats", message.Message))
             {
-                Int32 weaponsnum = weapons.Count;
-                Int32 adjsnum = adjectives.Count;
+                Int64 weaponsnum = weapons.Count;
+                Int64 adjsnum = adjectives.Count;
                 Int64 combospossible = (weaponsnum) + (weaponsnum * adjsnum) + (4 * weaponsnum * weaponsnum * adjsnum) + (weaponsnum * adjsnum * adjsnum) + (4 * weaponsnum * weaponsnum * adjsnum * adjsnum);
-                QIRC.SendMessage(client, $"Total weapons: {weaponsnum}. Total adjectives: {adjsnum}. Total possible combinations: {combospossible}.", message.User, message.Source);
+                BotController.SendMessage(client, $"Total weapons: {weaponsnum}. Total adjectives: {adjsnum}. Total possible combinations: {combospossible}.", message.User, message.Source);
                 return;
             }
             Random r = new Random();
@@ -161,7 +161,7 @@ namespace QIRC.Commands
             String weapon = weapons[r.Next(0, weapons.Count)];
             String adjective = adjectives[r.Next(0, adjectives.Count)];
 
-            Int32 extraweapon = r.Next(0, 20); // roll a d20; if it comes up 1-4, do something silly with an extra weapon entry.
+            Int32 extraweapon = r .Next(0, 20); // roll a d20; if it comes up 1-4, do something silly with an extra weapon entry.
             if (extraweapon == 1) // weapon/weapon hybrid
                 weapon += "/" + weapons[r.Next(0, weapons.Count)] + " hybrid";
             if (extraweapon == 2) // weapon with a weapon attachment
@@ -232,7 +232,7 @@ namespace QIRC.Commands
                 weapon = "an " + weapon;
             else
                 weapon = "a " + weapon;
-            QIRC.SendAction(client, $"gives {name} {weapon}", message.Source);
+            BotController.SendAction(client, $"gives {name} {weapon}", message.Source);
         }
     }
 }
