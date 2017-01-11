@@ -87,8 +87,10 @@ namespace QIRC.Commands
         /// </summary>
         public override void RunCommand(IrcClient client, ProtoIrcMessage message)
         {
-            List<String> weapons = WeaponData.Query.Where(w => w.wpn).Select(w => w.Content).ToList();
-            List<String> adjectives = WeaponData.Query.Where(w => !w.wpn).Select(w => w.Content).ToList();
+            List<WeaponData> weapons_ = WeaponData.Query.Where(w => w.wpn).ToList();
+            List<WeaponData> adjectives_ = WeaponData.Query.Where(w => !w.wpn).ToList();
+            List<String> weapons = weapons_.Select(w => w.Content).ToList();
+            List<String> adjectives = adjectives_.Select(w => w.Content).ToList();
             String msg = message.Message;
             if (StartsWithParam("add", message.Message))
             {
@@ -99,7 +101,7 @@ namespace QIRC.Commands
                         BotController.SendMessage(client, "Weapon already added!", message.User, message.Source);
                     else
                     {
-                        WeaponData.Query.Insert(new WeaponData {Content = msg, wpn = true});
+                        WeaponData.Query.Connection.Insert(new WeaponData {Content = msg, wpn = true});
                         BotController.SendMessage(client, "Weapon added!", message.User, message.Source);
                     }
                 }
@@ -109,7 +111,7 @@ namespace QIRC.Commands
                         BotController.SendMessage(client, "Adjective already added!", message.User, message.Source);
                     else
                     {
-                        WeaponData.Query.Insert(new WeaponData { Content = msg, wpn = false });
+                        WeaponData.Query.Connection.Insert(new WeaponData { Content = msg, wpn = false });
                         BotController.SendMessage(client, "Adjective added!", message.User, message.Source);
                     }
                 }
