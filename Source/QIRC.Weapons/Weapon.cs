@@ -214,7 +214,7 @@ namespace QIRC.Commands
                     if (!extraadj.EndsWith(">"))
                         extraadj += " ";
                     else
-                        extraadj = adjective.Substring(0, adjective.Length - 1);
+                        extraadj = extraadj.Substring(0, extraadj.Length - 1);
 
                     if (adjective.Length > 3) // more stuff. mostly a/an detection.
                     {
