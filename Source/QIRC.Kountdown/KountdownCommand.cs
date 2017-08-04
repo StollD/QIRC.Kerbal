@@ -70,12 +70,12 @@ namespace QIRC.Kountdown
         {
             return new[]
             {
-                "add", "Add countdown event. Syntax: " + Settings.Read<String>("control") + "kountdown -add name|description|time.",
+                "add", "Add Kountdown event. Syntax: " + Settings.Read<String>("control") + "kountdown -add name|description|time.",
                 "list", "List pending Kountdown Events or subscribers",
-                "remove", "Delete kountdown by id.",
-                "edit", "Edits a kountdown by id.",
-                "subscribe", "Subscribe yourself or a channel to kountdowns.",
-                "unsubscribe", "Unsubscribes yourself or a channel from the kountdowns."
+                "remove", "Delete Kountdown by id.",
+                "edit", "Edits a Kountdown by id.",
+                "subscribe", "Subscribe yourself or a channel to Kountdown.",
+                "unsubscribe", "Unsubscribes yourself or a channel from the Kountdown."
             };
         }
 
