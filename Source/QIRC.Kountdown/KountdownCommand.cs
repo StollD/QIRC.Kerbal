@@ -132,7 +132,7 @@ namespace QIRC.Kountdown
                     String content = "";
                     foreach (Event e in Event.Query)
                     {
-                        content += $"[{e.ID}] {e.Name} - {e.Description} - {e.Time.ToString()}\n";
+                        content += $"[{e.ID}] {e.Name} - {e.Description} - {e.Time.ToString("yyyy-MM-dd HH:mm:ss")}\n";
                     }
                     using (WebClient wc = new WebClient())
                     {
@@ -243,7 +243,7 @@ namespace QIRC.Kountdown
                         KountdownPlugin.queue = e.RebuildQueue(KountdownPlugin.queue);
                     }
                     BotController.Database.Update(e);
-                    BotController.SendMessage(client, $"Updated event #{e.ID}: {e.Name} - {e.Description} - {e.Time.ToString()}", message.User, message.Source);
+                    BotController.SendMessage(client, $"Updated event #{e.ID}: {e.Name} - {e.Description} - {e.Time.ToString("yyyy-MM-dd HH:mm:ss")}", message.User, message.Source);
                     return;
                 }
                 else
@@ -369,7 +369,7 @@ namespace QIRC.Kountdown
                 BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
                 return;
             }
-            BotController.SendMessage(client, $"ID: {evnt.ID} | Name: {evnt.Name} | Time: {evnt.Time.ToString()} | Unixtime: {(evnt.Time - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds} | Left: {(evnt.Time - DateTime.UtcNow).ToString()}", message.User, message.Source);
+            BotController.SendMessage(client, $"ID: {evnt.ID} | Name: {evnt.Name} | Time: {evnt.Time.ToString("yyyy-MM-dd HH:mm:ss")} | Unixtime: {(evnt.Time - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds} | Left: {(evnt.Time - DateTime.UtcNow).ToString("d'd 'h'h 'm'm 's's'")}", message.User, message.Source);
             BotController.SendMessage(client, $"Description: {evnt.Description}", message.User, message.Source);
         }
     }
