@@ -356,7 +356,7 @@ namespace QIRC.Kountdown
             Int32 ID = 0;
             if (String.Equals(message.Message, "next", StringComparison.InvariantCultureIgnoreCase))
             {
-                ID = Event.Query.OrderBy(e => e.Time.Ticks).First().ID;
+                ID = Event.Query.OrderBy(e => e.Time).First().ID;
             }
             else if (!Int32.TryParse(message.Message, out ID))
             {
