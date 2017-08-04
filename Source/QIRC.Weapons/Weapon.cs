@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using QIRC.Serialization;
 
-namespace QIRC.Commands
+namespace QIRC.Weapons
 {
     /// <summary>
     /// This is the implementation for the weapon command. Gives you weapons

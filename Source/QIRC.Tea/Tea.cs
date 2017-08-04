@@ -5,13 +5,14 @@
  */
 
 using ChatSharp;
+using QIRC.Commands;
 using QIRC.Configuration;
 using QIRC.IRC;
 using QIRC.Plugins;
 using System;
 using System.Linq;
 
-namespace QIRC.Commands
+namespace QIRC.Tea
 {
     /// <summary>
     /// This is the implementation for the tea command. The bot will grab a random word from a list

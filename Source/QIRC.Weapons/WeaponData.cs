@@ -8,7 +8,7 @@ using System;
 using QIRC.Serialization;
 using SQLite;
 
-namespace QIRC.Commands
+namespace QIRC.Weapons
 {
     /// <summary>
     /// Contains all Weapons and Adjectives
