@@ -353,7 +353,12 @@ namespace QIRC.Kountdown
             }
 
             // No params
-            if (!Int32.TryParse(message.Message, out Int32 ID))
+            Int32 ID = 0;
+            if (String.Equals(message.Message, "next", StringComparison.InvariantCultureIgnoreCase))
+            {
+                ID = Event.Query.OrderBy(e => e.Time.Ticks).First().ID;
+            }
+            else if (!Int32.TryParse(message.Message, out ID))
             {
                 BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
                 return;
@@ -364,7 +369,7 @@ namespace QIRC.Kountdown
                 BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
                 return;
             }
-            BotController.SendMessage(client, $"ID: {evnt.ID} | Name: {evnt.Name} | Time: {evnt.Time.ToString()} | Unixtime: {evnt.Time.Ticks} | Left: {(evnt.Time - DateTime.UtcNow).ToString()}", message.User, message.Source);
+            BotController.SendMessage(client, $"ID: {evnt.ID} | Name: {evnt.Name} | Time: {evnt.Time.ToString()} | Unixtime: {(evnt.Time - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds} | Left: {(evnt.Time - DateTime.UtcNow).ToString()}", message.User, message.Source);
             BotController.SendMessage(client, $"Description: {evnt.Description}", message.User, message.Source);
         }
     }

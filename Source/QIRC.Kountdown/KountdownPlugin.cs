@@ -81,7 +81,7 @@ namespace QIRC.Kountdown
                         else
                         {
                             String mpref = $"{(evt.Time - item.Item2).ToString()} left to event #{evt.ID}: {evt.Name}";
-                            String privm = $"<< ! >> {mpref} ({evt.Description}) at {evt.Time.ToString()} [unixtime {evt.Time.Ticks}]";
+                            String privm = $"<< ! >> {mpref} ({evt.Description}) at {evt.Time.ToString()} [unixtime {(evnt.Time - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds}]";
                             String chanm = $"{mpref} [at {evt.Time.ToString()}]. Say '!koundown {evt.ID}' for details";
                             foreach (SubscriberData data in SubscriberData.Query)
                             {
