@@ -17,7 +17,7 @@ namespace QIRC.Kountdown
     /// </summary>
     public class Event : Storage<Event>
     {
-        [PrimaryKey, Unique, NotNull]
+        [PrimaryKey, Unique, NotNull, AutoIncrement]
         public Int32 ID { get; set; }
         public String Name { get; set; }
         public String Description { get; set; }

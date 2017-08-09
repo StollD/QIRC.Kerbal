@@ -15,6 +15,7 @@ using QIRC.Serialization;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace QIRC.Kountdown
 {
@@ -111,6 +112,7 @@ namespace QIRC.Kountdown
                         BotController.SendMessage(client, "Invalid time syntax! Please use correct DateTime syntax.", message.User, message.Source);
                         return;
                     }
+                    time = time.ToUniversalTime();
                     Event e = Event.Query.Insert(data[0], data[1], time);
                     BotController.SendMessage(client, "Added event #" + e.ID, message.User, message.Source);
                     return;
@@ -239,7 +241,7 @@ namespace QIRC.Kountdown
                             BotController.SendMessage(client, "Invalid time syntax! Please use correct DateTime syntax.", message.User, message.Source);
                             return;
                         }
-                        e.Time = time;
+                        e.Time = time.ToUniversalTime();
                         KountdownPlugin.queue = e.RebuildQueue(KountdownPlugin.queue);
                     }
                     BotController.Database.Update(e);
