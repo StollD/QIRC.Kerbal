@@ -36,6 +36,7 @@ namespace QIRC.Kountdown
         {
             // build the queue
             queue = Event.BuildQueue();
+            Console.WriteLine(String.Join(",", queue.Select(s => s.Item2)));
 
             messageThread = new Thread(MessageWorker);
             messageThread.IsBackground = true;
@@ -56,8 +57,6 @@ namespace QIRC.Kountdown
                 lock (lockQueue)
                 {
                     Tuple<Int32, DateTime> item = queue[0];
-                    Console.WriteLine(item.Item1);
-                    Console.WriteLine(item.Item2);
                     if (item.Item2 <= DateTime.UtcNow)
                     {
                         Event evt = null;
@@ -66,36 +65,33 @@ namespace QIRC.Kountdown
                             Int32 ID = item.Item1;
                             evt = Event.Query.First(e => e.ID == ID);
                         }
-                        catch
+                        catch (Exception e)
                         {
                             queue.RemoveAt(0);
+                            Console.WriteLine(e);
                             continue;
                         }
                         Console.WriteLine(evt.Time);
-                        if (evt.Time <= DateTime.UtcNow)
+                        String mpref = $"{(evt.Time - item.Item2).ToString("d'd 'h'h 'm'm 's's'")} left to event #{evt.ID}: {evt.Name}";
+                        String privm = $"<< ! >> {mpref} ({evt.Description}) at {evt.Time.ToString("yyyy-MM-dd HH:mm:ss")} [unixtime {(evt.Time - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds}]";
+                        String chanm = $"{mpref} [at {evt.Time.ToString("yyyy-MM-dd HH:mm:ss")}]. Say '!kountdown {evt.ID}' for details";
+                        foreach (SubscriberData data in SubscriberData.Query)
                         {
-                            // Event has already happened
-                            Int32 ID = evt.ID;
-                            Event.Query.Delete(e => ID == e.ID);
-                        }
-                        else
-                        {
-                            String mpref = $"{(evt.Time - item.Item2).ToString("d'd 'h'h 'm'm 's's'")} left to event #{evt.ID}: {evt.Name}";
-                            String privm = $"<< ! >> {mpref} ({evt.Description}) at {evt.Time.ToString("yyyy-MM-dd HH:mm:ss")} [unixtime {(evt.Time - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds}]";
-                            String chanm = $"{mpref} [at {evt.Time.ToString("yyyy-MM-dd HH:mm:ss")}]. Say '!koundown {evt.ID}' for details";
-                            foreach (SubscriberData data in SubscriberData.Query)
+                            if (data.Name.StartsWith("#"))
                             {
-                                if (data.Name.StartsWith("#"))
-                                {
-                                    client.SendNotice(chanm, data.Name);
-                                }
-                                else
-                                {
-                                    client.SendMessage(privm, data.Name);
-                                }
+                                client.SendNotice(chanm, data.Name);
                             }
-                            queue.RemoveAt(0);
+                            else
+                            {
+                                client.SendMessage(privm, data.Name);
+                            }
                         }
+                        queue.RemoveAt(0);
+                        if (evt.Time == item.Item2)
+                        {
+                            // Event has expired
+                            queue = Event.BuildQueue();
+                        } 
                     }
                 }
             }

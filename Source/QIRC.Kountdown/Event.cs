@@ -92,9 +92,15 @@ namespace QIRC.Kountdown
                 List<Tuple<Int32, DateTime>> queue = new List<Tuple<Int32, DateTime>>();
                 foreach (Event e in Query)
                 {
+                    if (e.Time < DateTime.UtcNow)
+                    {
+                        continue;
+                    }
                     foreach (Int32 t in times)
                     {
                         TimeSpan span = new TimeSpan(0, 0, t);
+                        Console.WriteLine(span);
+                        Console.WriteLine(e.Time - span);
                         if (e.Time - span >= DateTime.UtcNow)
                         {
                             queue.Add(new Tuple<Int32, DateTime>(e.ID, e.Time - span));

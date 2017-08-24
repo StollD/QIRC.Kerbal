@@ -97,31 +97,24 @@ namespace QIRC.Kountdown
             // Add event
             if (StartsWithParam("add", message.Message))
             {
-                if (BotController.CheckPermission(AccessLevel.ADMIN, message.level))
+                String msg = message.Message;
+                StripParam("add", ref msg);
+                String[] data = msg.Split('|');
+                if (data.Length != 3)
                 {
-                    String msg = message.Message;
-                    StripParam("add", ref msg);
-                    String[] data = msg.Split('|');
-                    if (data.Length != 3)
-                    {
-                        BotController.SendMessage(client, "Invalid syntax. The correct syntax would be name|description|time.", message.User, message.Source);
-                        return;
-                    }
-                    if (!DateTime.TryParse(data[2], out DateTime time))
-                    {
-                        BotController.SendMessage(client, "Invalid time syntax! Please use correct DateTime syntax.", message.User, message.Source);
-                        return;
-                    }
-                    time = time.ToUniversalTime();
-                    Event e = Event.Query.Insert(data[0], data[1], time);
-                    BotController.SendMessage(client, "Added event #" + e.ID, message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid syntax. The correct syntax would be name|description|time.", message.User, message.Source);
                     return;
                 }
-                else
+                if (!DateTime.TryParse(data[2], out DateTime time))
                 {
-                    BotController.SendMessage(client, "You don't have the permission to use this command! Only " + AccessLevel.ADMIN + " can use this command! You are " + message.level + ".", message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid time syntax! Please use correct DateTime syntax.", message.User, message.Source);
                     return;
                 }
+                time = time.ToUniversalTime();
+                Event e = Event.Query.Insert(data[0], data[1], time);
+                BotController.SendMessage(client, "Added event #" + e.ID, message.User, message.Source);
+                KountdownPlugin.queue = Event.BuildQueue();
+                return;
             }
 
             // List
@@ -179,80 +172,65 @@ namespace QIRC.Kountdown
             // Remove
             if (StartsWithParam("remove", message.Message))
             {
-                if (BotController.CheckPermission(AccessLevel.ADMIN, message.level))
+                String msg = message.Message;
+                String sid = StripParam("remove", ref msg);
+                if (!Int32.TryParse(sid, out Int32 id))
                 {
-                    String msg = message.Message;
-                    String sid = StripParam("add", ref msg);
-                    if (!Int32.TryParse(sid, out Int32 id))
-                    {
-                        BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
-                        return;
-                    }
-                    Event e = Event.Query.FirstOrDefault(ev => ev.ID == id);
-                    if (e == null)
-                    {
-                        BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
-                        return;
-                    }
-                    Event.Query.Delete(ev => ev.ID == id);
-                    BotController.SendMessage(client, "Removed event #" + id, message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
                     return;
                 }
-                else
+                Event e = Event.Query.FirstOrDefault(ev => ev.ID == id);
+                if (e == null)
                 {
-                    BotController.SendMessage(client, "You don't have the permission to use this command! Only " + AccessLevel.ADMIN + " can use this command! You are " + message.level + ".", message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
                     return;
                 }
+                Event.Query.Delete(ev => ev.ID == id);
+                BotController.SendMessage(client, "Removed event #" + id, message.User, message.Source);
+                KountdownPlugin.queue = Event.BuildQueue();
+                return;
             }
 
             // Edit 
             if (StartsWithParam("edit", message.Message))
             {
-                if (BotController.CheckPermission(AccessLevel.ADMIN, message.level))
+                String msg = message.Message;
+                String sid = StripParam("edit", ref msg);
+                if (!Int32.TryParse(sid, out Int32 id))
                 {
-                    String msg = message.Message;
-                    String sid = StripParam("edit", ref msg);
-                    if (!Int32.TryParse(sid, out Int32 id))
-                    {
-                        BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
-                        return;
-                    }
-                    Event e = Event.Query.FirstOrDefault(ev => ev.ID == id);
-                    if (e == null)
-                    {
-                        BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
-                        return;
-                    }
-                    if (msg.StartsWith("name "))
-                    {
-                        msg = msg.Replace("name ", "");
-                        e.Name = msg;
-                    }
-                    if (msg.StartsWith("description "))
-                    {
-                        msg = msg.Replace("description ", "");
-                        e.Description = msg;
-                    }
-                    if (msg.StartsWith("time "))
-                    {
-                        msg = msg.Replace("time ", "");
-                        if (!DateTime.TryParse(msg, out DateTime time))
-                        {
-                            BotController.SendMessage(client, "Invalid time syntax! Please use correct DateTime syntax.", message.User, message.Source);
-                            return;
-                        }
-                        e.Time = time.ToUniversalTime();
-                        KountdownPlugin.queue = e.RebuildQueue(KountdownPlugin.queue);
-                    }
-                    BotController.Database.Update(e);
-                    BotController.SendMessage(client, $"Updated event #{e.ID}: {e.Name} - {e.Description} - {e.Time.ToString("yyyy-MM-dd HH:mm:ss")}", message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
                     return;
                 }
-                else
+                Event e = Event.Query.FirstOrDefault(ev => ev.ID == id);
+                if (e == null)
                 {
-                    BotController.SendMessage(client, "You don't have the permission to use this command! Only " + AccessLevel.ADMIN + " can use this command! You are " + message.level + ".", message.User, message.Source);
+                    BotController.SendMessage(client, "Invalid ID!", message.User, message.Source);
                     return;
                 }
+                if (msg.StartsWith("name "))
+                {
+                    msg = msg.Replace("name ", "");
+                    e.Name = msg;
+                }
+                if (msg.StartsWith("description "))
+                {
+                    msg = msg.Replace("description ", "");
+                    e.Description = msg;
+                }
+                if (msg.StartsWith("time "))
+                {
+                    msg = msg.Replace("time ", "");
+                    if (!DateTime.TryParse(msg, out DateTime time))
+                    {
+                        BotController.SendMessage(client, "Invalid time syntax! Please use correct DateTime syntax.", message.User, message.Source);
+                        return;
+                    }
+                    e.Time = time.ToUniversalTime();
+                }
+                BotController.Database.Update(e);
+                KountdownPlugin.queue = Event.BuildQueue();
+                BotController.SendMessage(client, $"Updated event #{e.ID}: {e.Name} - {e.Description} - {e.Time.ToString("yyyy-MM-dd HH:mm:ss")}", message.User, message.Source);
+                return;
             }
 
             // Subscribe
@@ -358,7 +336,7 @@ namespace QIRC.Kountdown
             Int32 ID = 0;
             if (String.Equals(message.Message, "next", StringComparison.InvariantCultureIgnoreCase))
             {
-                ID = Event.Query.OrderBy(e => e.Time).First().ID;
+                ID = Event.Query.Where(e => e.Time >= DateTime.UtcNow).OrderBy(e => e.Time).First().ID;
             }
             else if (!Int32.TryParse(message.Message, out ID))
             {
