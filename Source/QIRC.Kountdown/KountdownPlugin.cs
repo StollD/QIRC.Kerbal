@@ -36,7 +36,6 @@ namespace QIRC.Kountdown
         {
             // build the queue
             queue = Event.BuildQueue();
-            Console.WriteLine(String.Join(",", queue.Select(s => s.Item2)));
 
             messageThread = new Thread(MessageWorker);
             messageThread.IsBackground = true;
@@ -68,10 +67,8 @@ namespace QIRC.Kountdown
                         catch (Exception e)
                         {
                             queue.RemoveAt(0);
-                            Console.WriteLine(e);
                             continue;
                         }
-                        Console.WriteLine(evt.Time);
                         String mpref = $"{(evt.Time - item.Item2).ToString("d'd 'h'h 'm'm 's's'")} left to event #{evt.ID}: {evt.Name}";
                         String privm = $"<< ! >> {mpref} ({evt.Description}) at {evt.Time.ToString("yyyy-MM-dd HH:mm:ss")} [unixtime {(evt.Time - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds}]";
                         String chanm = $"{mpref} [at {evt.Time.ToString("yyyy-MM-dd HH:mm:ss")}]. Say '!kountdown {evt.ID}' for details";
